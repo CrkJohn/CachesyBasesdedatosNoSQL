@@ -1,5 +1,4 @@
-package util;
-
+package edu.eci.arsw.cinema.util;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
