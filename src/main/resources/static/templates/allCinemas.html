@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Cinemas page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--BOOTSTRAP CDN -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- APIMOCK -->
+<script src="apiclient.js"></script>
+<script src="app2.js"></script>
+<link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet"  href = "style.css"></style>
+
+</head>
+<body style="background-color: rgb(0, 0, 0);">
+	<div class="container">
+		<div class="jumbotron text-center">
+			<h1>CINEMAS PA! WEBSITE</h1>
+			<p>Enjoy your favorite movies in the best cinemas!!!</p>
+		</div>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark nav-tabs" role="tablist">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link " href="/index.html">Home </a></li>
+				<li class="nav-item active"><a class="nav-link " href="">Cinemas</a></li>
+				<!--li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#nav-home" role="tab" aria-selected="true">Cinemas</a></li-->
+				<li class="nav-item"><a class="nav-link" href="#">Reservations</a></li>
+			</ul>
+		</nav>
+		<legend class="text-white">
+
+            <form class="form-inline">
+
+                <label style="font-family: HelveticaNeue,Helvetica,Arial,sans-serif; padding: 6px 12px; font-size: 16px;"> What cinema do you want to look for?</label>
+                <input type="search"  class="form-control" name="nameCineInput" style="margin: 20px" id="input" placeholder="Enter cinema">
+                <button type="button" class="btn btn-light" onclick="app2.getCinemaByName($('#input').val())">Buscar</button>
+            </form>
+
+		</legend>
+
+		<div class="table-responsive table-light">
+            <table id="tableCine" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Movie</th>
+                        <th>Empty seats</th>
+                        <th>Date & Time</th>
+                        <th>Seating</th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+		
+	</div>
+
+    <!-- The Modal -->
+	<div class="modal" id="modalSeatsFunction">
+
+		<div class="modal-dialog">
+			<div class="modal-content" style="height: 586px; width: 702px" >
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title" id="cinemaFunctionName"></h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+
+					<div class="table-responsive">
+						<table id="tableSeatsFunction" class="table table-light">
+						</table>
+					</div>
+
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

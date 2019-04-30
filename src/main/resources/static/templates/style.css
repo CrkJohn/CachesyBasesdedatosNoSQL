@@ -1,0 +1,42 @@
+/* Make the image fully responsive */
+.carousel-inner img {
+	width: 100%;
+	height: 100%;
+}
+
+
+element.style {
+}
+@media (min-width: 576px)
+.form-inline .form-control-plaintext {
+    display: inline-block;
+}
+@media (min-width: 576px)
+.form-inline .form-control-plaintext {
+    display: inline-block;
+}
+input {
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    color : black;
+}
+
+.form-control-plaintext {
+    display: block;
+    width: 100%;
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+    margin-bottom: 0;
+    line-height: 1.5;
+    color: #f1f1f1;
+    background-color: transparent;
+    border: solid transparent;
+    border-width: 1px 0;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff0;
+    border-color: #dee2e600 #dee2e600 #fff0;
+}
