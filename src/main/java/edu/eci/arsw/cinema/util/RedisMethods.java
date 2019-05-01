@@ -3,7 +3,18 @@ package edu.eci.arsw.cinema.util;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang3.math.NumberUtils;
+
+import edu.eci.arsw.cinema.model.*;
 
 public class RedisMethods {
 
@@ -16,6 +27,43 @@ public class RedisMethods {
         jedis.close();
     }
 
+
+    public static List<List<AtomicBoolean>>  buyTicketRedis(String key){
+        String value = getFromREDIS(key);
+        ObjectMapper mapper = new ObjectMapper();
+
+        if(!value.equals("")){
+            try{
+                // cinemaY2018-12-18 15:30The Enigma"
+                int startIndex = -1 ,  endIndex = 0;
+                for(int i  = 0 ; i < key.length() ; ++i){
+                    if(Character.isDigit(key.charAt(i))){
+                        if(startIndex == -1 ) {
+                            startIndex = i;
+                        }else{
+                            endIndex = i;
+                        }
+                    }
+                }
+                String nameCinema  = key.substring(0,startIndex), functionDate = key.substring(startIndex,endIndex+1);
+                String functionMovieName =  key.substring(endIndex, key.length());  
+                String json = "{\"date\": \""+functionDate+"\", \"seats\":\""+value+"\"}";
+                CinemaFunction cinemaFunction = mapper.readValue(json, CinemaFunction.class);
+                return cinemaFunction.getSeats();
+            }catch (JsonParseException e) {
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+         
+        }
+        return null;    
+    }
+
+
+
     public static String getFromREDIS(String key){
         boolean intentar = true;
         String content = "";
@@ -25,7 +73,6 @@ public class RedisMethods {
             Transaction t = jedis.multi();// Crear la transacción t
             Response<String> data = t.get(key);
             List<Object> result = t.exec();
-            System.out.println(result.toString());
             if (result.size() > 0) {
                 intentar = false;
                 content = data.get();
@@ -34,10 +81,18 @@ public class RedisMethods {
         }
         return content;
     }
-    public static void main(String[] args) {
-        //saveToREDIS("this is test","this is values of the test");     
-        System.out.println(getFromREDIS("this is test")); 
-        System.out.println("aca");  
+
+    public static List<List<AtomicBoolean>> getSeatsRedis(String nameCinema , CinemaFunction cinemaFunction){
+        String key = nameCinema+cinemaFunction.getDate()+cinemaFunction.getMovie().getName();
+        return buyTicketRedis(key);
     }
+
+    
+
+    /*public static void main(String[] args) {
+        //saveToREDIS("this is test","this is values of the test");     
+        System.out.println(buyTicketRedis("cinemaY2018-12-18 15:30The Enigma")); 
+    
+    }*/
 
 }

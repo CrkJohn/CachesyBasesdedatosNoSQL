@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - RedisMethods",
+            "request": "launch",
+            "mainClass": "edu.eci.arsw.cinema.util.RedisMethods",
+            "projectName": "cinema"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - App",
+            "request": "launch",
+            "mainClass": "edu.eci.arsw.cinema.services.App",
+            "projectName": "cinema"
+        }
+    ]
+}

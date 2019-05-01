@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import edu.eci.arsw.cinema.persistence.TypeFiltro;
 
@@ -25,7 +26,7 @@ import edu.eci.arsw.cinema.persistence.TypeFiltro;
  * @author cristian
  */
 
-@Service
+@Component
 public class CinemaServices {
 	
     @Autowired
@@ -35,6 +36,11 @@ public class CinemaServices {
     @Autowired 
     @Qualifier("filteredByGender")
     TypeFiltro filtro;
+
+    CinemaServices(){
+
+    }
+
     
     public void addNewCinema(Cinema c){
         try {

@@ -5,7 +5,10 @@
  */
 package edu.eci.arsw.cinema.model;
 
+import edu.eci.arsw.cinema.deserializer.CinemaFunctionDeserializer;
 import edu.eci.arsw.cinema.persistence.CinemaException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,35 +16,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+
+@JsonDeserialize(using = CinemaFunctionDeserializer.class)
 public class CinemaFunction {
     
     private Movie movie;
     private List<List<AtomicBoolean>> seats=new ArrayList<>();
     private String date;
-    
-    
-    /*private class Silla {
-    	boolean tomada;
-    	public void set(boolean t) {
-    		this.tomada = t;
-    	}
-    	
-    	public boolean get() {
-    		return this.tomada;
-    	}
-    }*/
+
     
     public CinemaFunction(){}
-    
-    /*private void spm(int i, int j) {
-    	//Silla silla = seats.get(i).get(j);
-    	synchronized(silla) {
-    		if (silla.get() == false) {
-    			System.out.println("Pude cogerla!!!");
-    			silla.set(true);
-    		}
-    	}
-    }*/
     
     public CinemaFunction(Movie movie, String date){
         this.movie=movie;
@@ -102,6 +88,11 @@ public class CinemaFunction {
 
     synchronized public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
     
 }

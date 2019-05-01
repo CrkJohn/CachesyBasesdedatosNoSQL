@@ -1,4 +1,4 @@
-/*package edu.eci.arsw.cinema.services;
+package edu.eci.arsw.cinema.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import edu.eci.arsw.cinema.persistence.CinemaPersitence;
 import edu.eci.arsw.cinema.persistence.FilterException;
 
 public class App {
-
+	/*
 	public static void main(String[] args) {
 		ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         
@@ -89,5 +89,5 @@ public class App {
         
         
 	}
-
-}*/
+	*/
+}
