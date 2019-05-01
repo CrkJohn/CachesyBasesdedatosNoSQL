@@ -21,7 +21,7 @@ import edu.eci.arsw.cinema.persistence.CinemaException;
 @Component
 public class RedisMethods {
 
-    public static void saveToREDIS(String key, String data) {
+    public  void saveToREDIS(String key, String data) {
         Jedis jedis = JedisUtil.getPool().getResource();
         jedis.watch(key);
         Transaction t1 = jedis.multi();
@@ -32,7 +32,7 @@ public class RedisMethods {
 
 
     //Method persistence
-    public static List<List<AtomicBoolean>> buyTicketRedis(String key, int row, int col) {
+    public  List<List<AtomicBoolean>> buyTicketRedis(String key, int row, int col) {
         String value = getFromREDIS(key);
         ObjectMapper mapper = new ObjectMapper();
         if (!value.equals("")) {
@@ -48,9 +48,7 @@ public class RedisMethods {
                         }
                     }
                 }
-                String nameCinema = key.substring(0, startIndex),
-                        functionDate = key.substring(startIndex, endIndex + 1);
-                String functionMovieName = key.substring(endIndex, key.length());
+                String functionDate = key.substring(startIndex, endIndex + 1);
                 String json = "{\"date\": \"" + functionDate + "\", \"seats\":\"" + value + "\"}";
                 CinemaFunction cinemaFunction = mapper.readValue(json, CinemaFunction.class);
                 try {
@@ -75,7 +73,7 @@ public class RedisMethods {
 
 
 
-    public static List<List<AtomicBoolean>>  buyTicketRedis(String key){
+    public  List<List<AtomicBoolean>>  buyTicketRedis(String key){
         String value = getFromREDIS(key);
         ObjectMapper mapper = new ObjectMapper();
         if(!value.equals("")){
@@ -110,7 +108,7 @@ public class RedisMethods {
 
 
 
-    public static String getFromREDIS(String key){
+    public  String getFromREDIS(String key){
         boolean intentar = true;
         String content = "";
         while (intentar) {
@@ -128,7 +126,7 @@ public class RedisMethods {
         return content;
     }
 
-    public static List<List<AtomicBoolean>> getSeatsRedis(String nameCinema , CinemaFunction cinemaFunction){
+    public List<List<AtomicBoolean>> getSeatsRedis(String nameCinema , CinemaFunction cinemaFunction){
         String key = nameCinema+cinemaFunction.getDate()+cinemaFunction.getMovie().getName();
         return buyTicketRedis(key);
     }

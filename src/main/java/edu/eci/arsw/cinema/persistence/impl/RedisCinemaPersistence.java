@@ -56,7 +56,7 @@ public class RedisCinemaPersistence implements CinemaPersitence {
 	public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
 		String key = cinema+date+movieName;
 		if (!redisMethods.getFromREDIS(key).equals("")) {
-			redisMethods.buyTicketRedis(key);
+			redisMethods.buyTicketRedis(key,row,col);
 		}
 	}
 
