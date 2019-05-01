@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
 
+
+//https://www.baeldung.com/jackson-deserialization
 public class CinemaFunctionDeserializer extends StdDeserializer<CinemaFunction> {
 
     public CinemaFunctionDeserializer() {
