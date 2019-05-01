@@ -11,6 +11,8 @@ import edu.eci.arsw.cinema.model.Movie;
 import edu.eci.arsw.cinema.persistence.CinemaException;
 import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 import edu.eci.arsw.cinema.persistence.CinemaPersitence;
+import edu.eci.arsw.cinema.util.RedisMethods;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,11 +23,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component("RedisCinemaPersistence")
 public class RedisCinemaPersistence implements CinemaPersitence {
+
+	private final Map<String, Cinema> cinemas = new HashMap<>();
+
+	@Autowired
+	RedisMethods  redisMethods;
 
     public RedisCinemaPersistence(){
         /*CinemaFunction funct4 = new CinemaFunction(superheroes,functionDate2);
@@ -45,7 +54,10 @@ public class RedisCinemaPersistence implements CinemaPersitence {
 
 	@Override
 	public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
-		
+		String key = cinema+date+movieName;
+		if (!redisMethods.getFromREDIS(key).equals("")) {
+			redisMethods.buyTicketRedis(key);
+		}
 	}
 
 	@Override

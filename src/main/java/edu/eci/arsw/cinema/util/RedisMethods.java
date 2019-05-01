@@ -13,25 +13,71 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Component;
 
 import edu.eci.arsw.cinema.model.*;
+import edu.eci.arsw.cinema.persistence.CinemaException;
 
+@Component
 public class RedisMethods {
 
-    public static void saveToREDIS(String key , String data){
+    public static void saveToREDIS(String key, String data) {
         Jedis jedis = JedisUtil.getPool().getResource();
         jedis.watch(key);
         Transaction t1 = jedis.multi();
         t1.set(key, data);
-        t1.exec();                
+        t1.exec();
         jedis.close();
     }
+
+
+    //Method persistence
+    public static List<List<AtomicBoolean>> buyTicketRedis(String key, int row, int col) {
+        String value = getFromREDIS(key);
+        ObjectMapper mapper = new ObjectMapper();
+        if (!value.equals("")) {
+            try {
+                // cinemaY2018-12-18 15:30The Enigma"
+                int startIndex = -1, endIndex = 0;
+                for (int i = 0; i < key.length(); ++i) {
+                    if (Character.isDigit(key.charAt(i))) {
+                        if (startIndex == -1) {
+                            startIndex = i;
+                        } else {
+                            endIndex = i;
+                        }
+                    }
+                }
+                String nameCinema = key.substring(0, startIndex),
+                        functionDate = key.substring(startIndex, endIndex + 1);
+                String functionMovieName = key.substring(endIndex, key.length());
+                String json = "{\"date\": \"" + functionDate + "\", \"seats\":\"" + value + "\"}";
+                CinemaFunction cinemaFunction = mapper.readValue(json, CinemaFunction.class);
+                try {
+                    cinemaFunction.buyTicket(row, col);
+                } catch (CinemaException e) {
+                    e.printStackTrace();
+                }
+                String  seats = cinemaFunction.getSeats().toString();
+                saveToREDIS(key, seats);
+                return cinemaFunction.getSeats();
+            }catch (JsonParseException e) {
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+         
+        }
+        return null;    
+    }
+
 
 
     public static List<List<AtomicBoolean>>  buyTicketRedis(String key){
         String value = getFromREDIS(key);
         ObjectMapper mapper = new ObjectMapper();
-
         if(!value.equals("")){
             try{
                 // cinemaY2018-12-18 15:30The Enigma"
@@ -88,11 +134,12 @@ public class RedisMethods {
     }
 
     
-
-    /*public static void main(String[] args) {
+    /*
+    public static void main(String[] args) {
         //saveToREDIS("this is test","this is values of the test");     
         System.out.println(buyTicketRedis("cinemaY2018-12-18 15:30The Enigma")); 
     
-    }*/
+    }
+    */
 
 }
