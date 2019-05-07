@@ -17,11 +17,12 @@ import org.springframework.stereotype.Component;
 
 import edu.eci.arsw.cinema.model.*;
 import edu.eci.arsw.cinema.persistence.CinemaException;
+import edu.eci.arsw.cinema.persistence.impl.RedisCinemaPersistence;
 
 @Component
 public class RedisMethods {
 
-    public  void saveToREDIS(String key, String data) {
+    public static void saveToREDIS(String key, String data) {
         Jedis jedis = JedisUtil.getPool().getResource();
         jedis.watch(key);
         Transaction t1 = jedis.multi();
@@ -32,7 +33,7 @@ public class RedisMethods {
 
 
     //Method persistence
-    public  List<List<AtomicBoolean>> buyTicketRedis(String key, int row, int col) {
+    public static List<List<AtomicBoolean>> buyTicketRedis(String key, int row, int col) {
         String value = getFromREDIS(key);
         ObjectMapper mapper = new ObjectMapper();
         if (!value.equals("")) {
@@ -71,9 +72,7 @@ public class RedisMethods {
         return null;    
     }
 
-
-
-    public  List<List<AtomicBoolean>>  buyTicketRedis(String key){
+    public static List<List<AtomicBoolean>> buyTicketRedis(String key) throws CinemaException {
         String value = getFromREDIS(key);
         ObjectMapper mapper = new ObjectMapper();
         if(!value.equals("")){
@@ -102,13 +101,13 @@ public class RedisMethods {
                 e.printStackTrace();
             }
          
+        }else{
+            throw new CinemaException("The cinema does not exist in the database");
         }
-        return null;    
+		return null;
     }
 
-
-
-    public  String getFromREDIS(String key){
+    public static String getFromREDIS(String key){
         boolean intentar = true;
         String content = "";
         while (intentar) {
@@ -126,18 +125,23 @@ public class RedisMethods {
         return content;
     }
 
-    public List<List<AtomicBoolean>> getSeatsRedis(String nameCinema , CinemaFunction cinemaFunction){
+    public static List<List<AtomicBoolean>> getSeatsRedis(String nameCinema , CinemaFunction cinemaFunction) throws CinemaException{
         String key = nameCinema+cinemaFunction.getDate()+cinemaFunction.getMovie().getName();
         return buyTicketRedis(key);
     }
 
-    
-    /*
-    public static void main(String[] args) {
-        //saveToREDIS("this is test","this is values of the test");     
-        System.out.println(buyTicketRedis("cinemaY2018-12-18 15:30The Enigma")); 
-    
+    public static void main(String[] args) throws CinemaException {
+        //saveToREDIS("this is test","this is values of the test");    
+    	//System.out.println(buyTicketRedis("cinemaY2018-12-18 15:30The Enigma"));
+    	/*CinemaFunction cinemaFunction = new CinemaFunction(new Movie("SuperHeroes Movie", "Action"), "2018-12-18 17:00");
+    	List<List<AtomicBoolean>> seats = getSeatsRedis("cinemaY", cinemaFunction);
+    	//List<List<AtomicBoolean>> seats = buyTicketRedis("cinemaX2018-12-18 15:30SuperHeroes Movie");
+        for(int i=0; i<seats.size(); i++){
+            for(int j=0; j<seats.get(i).size(); j++){
+                System.out.print(" "+seats.get(i).get(j));
+            }
+            System.out.println("");
+        }*/
+    	RedisCinemaPersistence rediscp = new RedisCinemaPersistence();
     }
-    */
-
 }

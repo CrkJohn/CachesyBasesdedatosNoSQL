@@ -73,6 +73,10 @@ public class CinemaFunction {
     public List<List<AtomicBoolean>> getSeats() {
         return this.seats;
     }
+
+    public void setSeats(List<List<AtomicBoolean>> newSeats){
+        this.seats = newSeats;
+    }
     
     public Movie getMovie() {
         return movie;

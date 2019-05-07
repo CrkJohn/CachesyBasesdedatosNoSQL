@@ -37,20 +37,37 @@ public class RedisCinemaPersistence implements CinemaPersitence {
 	RedisMethods  redisMethods;
 
     public RedisCinemaPersistence(){
-        /*CinemaFunction funct4 = new CinemaFunction(superheroes,functionDate2);
-        try {
-        //LOAD DATA FROM REDIS
-            funct1.setSeats(RedisMethods.getSeatsRedis("cinemaX",funct1));
-            funct2.setSeats(RedisMethods.getSeatsRedis("cinemaX",funct2));
-            funct3.setSeats(RedisMethods.getSeatsRedis("cinemaY",funct3));
-            funct4.setSeats(RedisMethods.getSeatsRedis("cinemaY",funct4));
-        } catch (CinemaException ex) {
-            Logger.getLogger(RedisCinemaPersistence.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        functionsX.add(funct1);
-        */
-    }
+		// load stub data
+		// Cinema 1
+		List<CinemaFunction> functionsX = new ArrayList<>();
+		List<CinemaFunction> functionsY = new ArrayList<>();
 
+		CinemaFunction funct1 = new CinemaFunction(new Movie("The Enigma", "Bibliography"), "2018-12-18 15:30");
+		CinemaFunction funct2 = new CinemaFunction(new Movie("The Night", "Horror"), "2018-12-18 15:30");
+		CinemaFunction funct3 = new CinemaFunction(new Movie("SuperHeroes Movie", "Action"), "2018-12-18 15:30");
+		CinemaFunction funct4 = new CinemaFunction(new Movie("SuperHeroes Movie", "Action"), "2018-12-18 17:00");
+		
+		try {
+			//LOAD DATA FROM REDIS
+			funct1.setSeats(RedisMethods.getSeatsRedis("cinemaY",funct1));
+			funct2.setSeats(RedisMethods.getSeatsRedis("cinemaX",funct2));
+			funct3.setSeats(RedisMethods.getSeatsRedis("cinemaX",funct3));
+			funct4.setSeats(RedisMethods.getSeatsRedis("cinemaY",funct4));
+		} catch (CinemaException ex) {
+			Logger.getLogger(RedisCinemaPersistence.class.getName()).log(Level.SEVERE, null, ex);
+			//System.err.println("PAILAS");
+		}
+		functionsX.add(funct1);
+		functionsX.add(funct2);
+		functionsY.add(funct3);
+		functionsY.add(funct4);
+		//System.err.println("PERFECTO");
+		
+		Cinema cinemaX = new Cinema("cinemaX", functionsX);
+		cinemas.put("cinemaX", cinemaX);
+		Cinema cinemaY = new Cinema("cinemaY", functionsY);
+		cinemas.put("cinemaY", cinemaY);
+  }
 
 	@Override
 	public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
@@ -62,33 +79,81 @@ public class RedisCinemaPersistence implements CinemaPersitence {
 
 	@Override
 	public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) {
-		return null;
+		List<CinemaFunction> functions = new ArrayList<CinemaFunction>();
+		if (cinemas.containsKey(cinema)) {
+			Cinema cine = cinemas.get(cinema);
+			for (CinemaFunction cf : cine.getFunctions()) {
+				if (cf.getDate().equals(date)) {
+					functions.add(cf);
+					// System.out.println(date);
+				}
+			}
+		}
+		return functions;
 	}
 
 	@Override
-	public void saveCinema(Cinema cinema) throws CinemaPersistenceException {
-		
+	public void saveCinema(Cinema c) throws CinemaPersistenceException {
+		if (cinemas.containsKey(c.getName())) {
+			throw new CinemaPersistenceException("The given cinema already exists: " + c.getName());
+		} else {
+			cinemas.put(c.getName(), c);
+		}
 	}
 
 	@Override
 	public Cinema getCinema(String name) throws CinemaPersistenceException {
-		return null;
+		if (!cinemas.containsKey(name)) {
+			throw new CinemaPersistenceException("The cinema doesn't exists :" + name);
+		}
+		return cinemas.get(name);
 	}
 
 	@Override
 	public Set<Cinema> getAllCinemas() {
-		return null;
+		Set<Cinema> cinemasAll = new HashSet<Cinema>();
+		for (Map.Entry<String, Cinema> e : cinemas.entrySet()) {
+			cinemasAll.add(e.getValue());
+		}
+		return cinemasAll;
 	}
 
 	@Override
-	public CinemaFunction getCinemaFunctionbyCinemaDateAndMovie(String cinema, String date, String movie)
+	public CinemaFunction getCinemaFunctionbyCinemaDateAndMovie(String cinema, String date, String moviename)
 			throws CinemaPersistenceException {
+
+		if (cinemas.containsKey(cinema)) {
+			Cinema cine = cinemas.get(cinema);
+			for (CinemaFunction cf : cine.getFunctions()) {
+				if (cf.getDate().equals(date) && cf.getMovie().getName().equals(moviename)) {
+					return cf;
+				}
+			}
+		}
+
 		return null;
+
 	}
 
 	@Override
 	public void setCinemaFuction(String name, CinemaFunction cinemaFunction) {
-		
+		for (Map.Entry<String, Cinema> e : cinemas.entrySet()) {
+			if (e.getKey().equals(name)) {
+				int ind = -1;
+				for (CinemaFunction cinemaFunction1 : e.getValue().getFunctions()) {
+					if (cinemaFunction.getMovie().equals(cinemaFunction.getMovie().getName())
+							&& cinemaFunction.getDate().equals(cinemaFunction1.getDate())) {
+						break;
+					}
+					ind++;
+				}
+				if (ind != -1) {
+					cinemas.get(name).getFunctions().set(ind, cinemaFunction);
+				} else {
+					cinemas.get(name).getFunctions().add(cinemaFunction);
+				}
+			}
+		}
 	}
 
 }
